@@ -1,9 +1,68 @@
 let products =[
-    { id: 'prod1', name: 'Banana', price: 5, quantity: 0 },
-    { id: 'prod2', name: 'Manzana', price: 3, quantity: 0 },
-    { id: 'prod3', name: 'Naranja', price: 2.5, quantity: 0 }
+    { id: 'prod1', name: 'Banana', price: 5},
+    { id: 'prod2', name: 'Manzana', price: 3},
+    { id: 'prod3', name: 'Naranja', price: 2.5}
 ];
 
+let cart = [];
+
+const divProdList = document.getElementById('ProdList');
+
+products.forEach((product) => {
+    const div = document.createElement("div");
+
+    div.innerHTML = `
+        <img src="${product.image}" /> 
+        <p>Nombre: ${product.name} </p> 
+        <p>Precio: $${product.price} </p>
+    `;
+
+    const btnProdAdd = document.createElement("button");
+    btnProdAdd.innerText = '+';
+    const btnProdSub = document.createElement("button");
+    btnProdSub.innerText = '-';
+
+    let prodQuantity = 0;
+    const lblProdQuant = document.createElement("p");
+    lblProdQuant.textContent = `Cantidad: 0`;
+
+    btnProdAdd.addEventListener('click', function() {
+        prodQuantity++;
+        lblProdQuant.textContent = `Cantidad: ${prodQuantity}`;
+    });
+
+    btnProdSub.addEventListener('click', function() {
+        if(prodQuantity>0){
+            prodQuantity--;
+            lblProdQuant.textContent = `Cantidad: ${prodQuantity}`;
+        }
+    });
+
+    const button = document.createElement("button");
+    button.innerText = 'Agregar al carrito';
+
+    button.addEventListener("click", () => {
+        const existingItem = cart.find(item => item.product === product);
+        if (prodQuantity !== 0) {
+            if (existingItem) {
+                existingItem.quantity = prodQuantity;
+            } else {
+                cart.push({product, quantity: prodQuantity});
+            }
+        } else if (existingItem) {
+            const index = cart.indexOf(product)
+            cart.splice(index, 1)
+        }
+    })
+    
+    div.appendChild(lblProdQuant)
+    div.appendChild(btnProdAdd)
+    div.appendChild(btnProdSub)
+    div.appendChild(button)
+    divProdList.appendChild(div)
+})
+
+/* 
 const prodLabel = (list, id) => `${list.find(element => element.id === id).name}: $${list.find(element => element.id === id).price} c/u, cantidad:`;
 
 const lblProd1 = document.getElementById('Prod1')
@@ -31,7 +90,7 @@ btnProd1Sub.addEventListener('click', function() {
     }
 });
 
-const lblProd2Quant = document.getElementById('Prod2Quant')
+const lblProd2Quant = document.getElementById('Prod2Quant');
 const btnProd2Add = document.getElementById('Prod2Add');
 const btnProd2Sub = document.getElementById('Prod2Sub');
 
@@ -50,7 +109,7 @@ btnProd2Sub.addEventListener('click', function() {
     }
 });
 
-const lblProd3Quant = document.getElementById('Prod3Quant')
+const lblProd3Quant = document.getElementById('Prod3Quant');
 const btnProd3Add = document.getElementById('Prod3Add');
 const btnProd3Sub = document.getElementById('Prod3Sub');
 let prod3Quant = 0;
@@ -102,7 +161,7 @@ btnCalculate.addEventListener('click', function() {
     if(calcTotal(products)>0) {
         showResult();
     }
-})
+});
 
 btnCustom.addEventListener('click', function() {
     products[0].quantity=0;
@@ -123,7 +182,7 @@ btnCustom.addEventListener('click', function() {
     } else {
         alert("No se ha introducido ningún valor válido. Por favor, vuelva a intentarlo.")
     }
-})
+});
 
 btnReset.addEventListener('click', function() {
     if (confirm("¿Está seguro de que desea reiniciar? Esto eliminará todos los datos del carrito.")) {
@@ -134,4 +193,5 @@ btnReset.addEventListener('click', function() {
         products[2].quantity=0;
         lblProd3Quant.textContent = products[2].quantity;
     }
-})
+});
+ */
