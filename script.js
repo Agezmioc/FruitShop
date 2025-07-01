@@ -1,7 +1,7 @@
 let products =[
-    { name: 'Banana', price: 5},
-    { name: 'Manzana', price: 3},
-    { name: 'Naranja', price: 2.5}
+    { name: 'Banana', price: 5, image: 'https://cdn-icons-png.freepik.com/512/3313/3313721.png?ga=GA1.1.724132260.1751382087'},
+    { name: 'Manzana', price: 3, image: 'https://cdn-icons-png.freepik.com/512/3313/3313723.png?ga=GA1.1.724132260.1751382087'},
+    { name: 'Naranja', price: 2.5, image: 'https://cdn-icons-png.freepik.com/512/3313/3313710.png?ga=GA1.1.724132260.1751382087'}
 ];
 
 let cart = JSON.parse(localStorage.getItem('Cart')) ?? [];
@@ -15,16 +15,23 @@ function getCartItem(product) {
 function renderProductList() {
     products.forEach((product) => {
         const div = document.createElement("div");
-    
-        div.innerHTML = `
-            <img src="${product.image}" /> 
-            <p>Nombre: ${product.name} </p> 
-            <p>Precio: $${product.price} </p>
-        `;
+        div.classList.add("prodDiv");
+
+        const img = document.createElement("img");
+        img.src = product.image;
+
+        const info = document.createElement("div");
+        info.classList.add("prodInfo");
+
+        const pName = document.createElement("p");
+        pName.textContent = `Nombre: ${product.name}`;
+
+        const pPrice = document.createElement("p");
+        pPrice.textContent = `Precio: $${product.price}`;
         
         const existingItem = getCartItem(product);
         let prodQuantity = existingItem?.quantity ?? 0;
-        const lblWrapper = document.createElement("label");
+        const lblWrapper = document.createElement("p");
         lblWrapper.innerText = "Cantidad: ";
 
         const inputQuant = document.createElement("input");
@@ -44,11 +51,12 @@ function renderProductList() {
                 }
                 localStorage.setItem('Cart', JSON.stringify(cart));
             } else if (cartItem) {
-                const index = cart.indexOf(product);
+                const index = getCartItem(product);
                 cart.splice(index, 1);
                 localStorage.setItem('Cart', JSON.stringify(cart));
             }
             DetailCreator(cart);
+            toggleCalcVisibility();
         }
 
         inputQuant.addEventListener("input", () => {
@@ -91,18 +99,32 @@ function renderProductList() {
                 localStorage.removeItem('Cart');
             }
             DetailCreator(cart);
+            toggleCalcVisibility();
         })
-        
+
+        div.appendChild(img);
+        div.appendChild(info);
+        info.appendChild(pName);
+        info.appendChild(pPrice);
+        info.appendChild(lblWrapper);
+        info.appendChild(btnRmvFromCart);
         lblWrapper.appendChild(inputQuant);
-        div.appendChild(lblWrapper);
-        div.appendChild(btnRmvFromCart);
         divProdList.appendChild(div);
     })
 }
 
 const divCalc = document.createElement("div");
+divCalc.classList.add("calcDiv");
+
+function toggleCalcVisibility() {
+    divCalc.style.display = cart.length === 0 ? "none" : "block";
+    if (cart.length === 0) {
+        localStorage.removeItem('Cart');
+    }
+}
 
 const pCalcDetail = document.createElement("p");
+pCalcDetail.classList.add("calcDetailText");
 
 const calcDetail = (list, id) => list[id].product.price*list[id].quantity;
 
@@ -121,7 +143,7 @@ function subDetailCreator(list) {
     let detailText = [];
     for (let i = 0; i < orderedList.length; i++) {
         if (orderedList[i].quantity > 0) {
-            detailText.push(`\n\-${orderedList[i].product.name} x ${orderedList[i].quantity} :   ${calcDetail(orderedList, i)}`);
+            detailText.push(`\n\-${orderedList[i].product.name} x ${orderedList[i].quantity} :   $${calcDetail(orderedList, i)}`);
         }
     }
     return detailText.join('');
@@ -147,11 +169,15 @@ btnDelCart.addEventListener("click", () => {
     divProdList.innerHTML = '';
     renderProductList();
     DetailCreator(cart);
+    toggleCalcVisibility();
 })
 
 renderProductList();
 DetailCreator(cart);
+toggleCalcVisibility();
 
-document.body.appendChild(divCalc);
-divCalc.appendChild(btnDelCart);
+const main = document.querySelector('main')
+
+main.appendChild(divCalc);
 divCalc.appendChild(pCalcDetail);
+divCalc.appendChild(btnDelCart);

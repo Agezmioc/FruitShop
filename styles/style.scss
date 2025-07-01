@@ -1,0 +1,167 @@
+@import 'colors';
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Ubuntu", sans-serif;
+}
+
+body {
+    background-color: map-get($map: $colors, $key: base);
+    color: map-get($map: $colors, $key: brighter);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+footer {
+    background-color: map-get($map: $colors, $key: dark);
+    color: map-get($map: $colors, $key: brighter);
+    padding: 1rem;
+    height: fit-content;
+    margin-top: auto;
+
+    a {
+        color: map-get($map: $colors, $key: base);
+        font-weight: 700;
+        text-decoration: none;
+
+        &:hover, &:focus {
+            color: map-get($map: $colors, $key: highlight);
+        }   
+    }
+}
+
+h1 {
+    color: map-get($map: $colors, $key: dark);
+    margin-bottom: 1rem;
+}
+
+header {
+    background-color: map-get($map: $colors, $key: brighter);
+    padding: 1rem;
+    height: fit-content;
+
+    p {
+        color: map-get($map: $colors, $key: base);
+    }
+}
+
+img {
+    margin: 1rem;
+}
+
+main {
+    display: flex;
+}
+
+#ProdList {
+
+    .prodDiv {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+
+        img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+
+        .prodInfo {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            p {
+            margin: 0.25rem 0;
+            }
+
+            button {
+                appearance: none;
+                background-color: map-get($map: $colors, $key: bright);
+                border: 1px solid rgba(27, 31, 35, .15);
+                border-radius: 6px;
+                box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+                box-sizing: border-box;
+                color: map-get($map: $colors, $key: dark);
+                cursor: pointer;
+                display: inline-block;
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 20px;
+                padding: 6px 16px;
+                position: relative;
+                text-align: center;
+                text-decoration: none;
+                user-select: none;
+                -webkit-user-select: none;
+                touch-action: manipulation;
+                vertical-align: middle;
+                white-space: nowrap;
+                transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+
+                &:hover {
+                    background-color: map-get($map: $colors, $key: brighter);
+                }
+
+
+                &:active {
+                    background-color: map-get($map: $colors, $key: highlight);
+                    box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
+                }
+            }
+
+            input {
+                background-color: map-get($colors, brighter);
+                color: map-get($colors, dark);
+                border: 1px solid map-get($colors, bright);
+                border-radius: 0.25rem;
+                padding: 0.25rem 0.5rem;
+                width: 60px;
+                font-size: 1rem;
+                transition: border-color 0.2s, box-shadow 0.2s;
+
+                &:focus {
+                    outline: none;
+                    border-color: map-get($colors, highlight);
+                    box-shadow: 0 0 4px map-get($colors, highlight);
+                }
+
+                &::selection {
+                    background-color: map-get($colors, highlight);
+                    color: map-get($colors, base);
+                }
+            }
+        }
+    }
+    
+}
+
+.calcDiv {
+    background-color: map-get($map: $colors, $key: brighter);
+    color: map-get($map: $colors, $key: dark);
+    padding: 20px;
+    border: 1px solid map-get($map: $colors, $key: bright);
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    padding: 1rem;
+    width: fit-content;
+    height: fit-content;
+    margin: auto;
+
+    p {
+        margin: 0.5rem 0;
+        white-space: pre-wrap;
+    }
+
+    button {
+        display: block;
+        margin: auto;
+    }
+}
+

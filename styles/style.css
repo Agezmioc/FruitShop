@@ -1,0 +1,147 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Ubuntu", sans-serif;
+}
+
+body {
+  background-color: #1D3E1D;
+  color: #83BC71;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  background-color: #300D4A;
+  color: #83BC71;
+  padding: 1rem;
+  height: fit-content;
+  margin-top: auto;
+}
+footer a {
+  color: #1D3E1D;
+  font-weight: 700;
+  text-decoration: none;
+}
+footer a:hover, footer a:focus {
+  color: #D8D987;
+}
+
+h1 {
+  color: #300D4A;
+  margin-bottom: 1rem;
+}
+
+header {
+  background-color: #83BC71;
+  padding: 1rem;
+  height: fit-content;
+}
+header p {
+  color: #1D3E1D;
+}
+
+img {
+  margin: 1rem;
+}
+
+main {
+  display: flex;
+}
+
+#ProdList .prodDiv {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+#ProdList .prodDiv img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+#ProdList .prodDiv .prodInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+#ProdList .prodDiv .prodInfo p {
+  margin: 0.25rem 0;
+}
+#ProdList .prodDiv .prodInfo button {
+  appearance: none;
+  background-color: #56742F;
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, 0.1) 0 1px 0;
+  box-sizing: border-box;
+  color: #300D4A;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  padding: 6px 16px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+  transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+#ProdList .prodDiv .prodInfo button:hover {
+  background-color: #83BC71;
+}
+#ProdList .prodDiv .prodInfo button:active {
+  background-color: #D8D987;
+  box-shadow: rgba(20, 70, 32, 0.2) 0 1px 0 inset;
+}
+#ProdList .prodDiv .prodInfo input {
+  background-color: #83BC71;
+  color: #300D4A;
+  border: 1px solid #56742F;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  width: 60px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+#ProdList .prodDiv .prodInfo input:focus {
+  outline: none;
+  border-color: #D8D987;
+  box-shadow: 0 0 4px #D8D987;
+}
+#ProdList .prodDiv .prodInfo input::selection {
+  background-color: #D8D987;
+  color: #1D3E1D;
+}
+
+.calcDiv {
+  background-color: #83BC71;
+  color: #300D4A;
+  padding: 20px;
+  border: 1px solid #56742F;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  padding: 1rem;
+  width: fit-content;
+  height: fit-content;
+  margin: auto;
+}
+.calcDiv p {
+  margin: 0.5rem 0;
+  white-space: pre-wrap;
+}
+.calcDiv button {
+  display: block;
+  margin: auto;
+}
+
+/*# sourceMappingURL=style.css.map */
