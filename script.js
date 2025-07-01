@@ -1,138 +1,106 @@
 let products =[
-    { id: 'prod1', name: 'Banana', price: 5},
-    { id: 'prod2', name: 'Manzana', price: 3},
-    { id: 'prod3', name: 'Naranja', price: 2.5}
+    { name: 'Banana', price: 5},
+    { name: 'Manzana', price: 3},
+    { name: 'Naranja', price: 2.5}
 ];
 
-let cart = [];
+let cart = JSON.parse(localStorage.getItem('Cart')) ?? [];
 
 const divProdList = document.getElementById('ProdList');
 
-products.forEach((product) => {
-    const div = document.createElement("div");
+function getCartItem(product) {
+    return cart.find(item => item.product.name === product.name);
+}
 
-    div.innerHTML = `
-        <img src="${product.image}" /> 
-        <p>Nombre: ${product.name} </p> 
-        <p>Precio: $${product.price} </p>
-    `;
-
-    const btnProdAdd = document.createElement("button");
-    btnProdAdd.innerText = '+';
-    const btnProdSub = document.createElement("button");
-    btnProdSub.innerText = '-';
-
-    let prodQuantity = 0;
-    const lblProdQuant = document.createElement("p");
-    lblProdQuant.textContent = `Cantidad: 0`;
-
-    btnProdAdd.addEventListener('click', function() {
-        prodQuantity++;
-        lblProdQuant.textContent = `Cantidad: ${prodQuantity}`;
-    });
-
-    btnProdSub.addEventListener('click', function() {
-        if(prodQuantity>0){
-            prodQuantity--;
+function renderProductList() {
+    products.forEach((product) => {
+        const div = document.createElement("div");
+    
+        div.innerHTML = `
+            <img src="${product.image}" /> 
+            <p>Nombre: ${product.name} </p> 
+            <p>Precio: $${product.price} </p>
+        `;
+        
+        const existingItem = getCartItem(product);
+        let prodQuantity = existingItem?.quantity ?? 0;
+        const lblProdQuant = document.createElement("p");
+        lblProdQuant.classList.add("lblProdQuant");
+        function updateQuantText() {
             lblProdQuant.textContent = `Cantidad: ${prodQuantity}`;
         }
-    });
+        updateQuantText();
 
-    const button = document.createElement("button");
-    button.innerText = 'Agregar al carrito';
-
-    button.addEventListener("click", () => {
-        const existingItem = cart.find(item => item.product === product);
-        if (prodQuantity !== 0) {
-            if (existingItem) {
-                existingItem.quantity = prodQuantity;
-            } else {
-                cart.push({product, quantity: prodQuantity});
+        function updateDetail() {
+            const cartItem = getCartItem(product);
+            if (prodQuantity !== 0) {
+                if (cartItem) {
+                    cartItem.quantity = prodQuantity;
+                } else {
+                    cart.push({product, quantity: prodQuantity});
+                }
+                localStorage.setItem('Cart', JSON.stringify(cart));
+            } else if (cartItem) {
+                const index = cart.indexOf(product);
+                cart.splice(index, 1);
+                localStorage.setItem('Cart', JSON.stringify(cart));
             }
-        } else if (existingItem) {
-            const index = cart.indexOf(product)
-            cart.splice(index, 1)
+            DetailCreator(cart);
         }
-    })
     
-    div.appendChild(lblProdQuant)
-    div.appendChild(btnProdAdd)
-    div.appendChild(btnProdSub)
-    div.appendChild(button)
-    divProdList.appendChild(div)
-})
+        const btnProdAdd = document.createElement("button");
+        btnProdAdd.innerText = '+';
+        const btnProdSub = document.createElement("button");
+        btnProdSub.innerText = '-';
+    
+        btnProdAdd.addEventListener('click', function() {
+            prodQuantity++;
+            updateQuantText();
+            updateDetail()
+        });
+    
+        btnProdSub.addEventListener('click', function() {
+            if(prodQuantity>0){
+                prodQuantity--;
+                updateQuantText();
+            }
+            updateDetail()
+            if (cart.length === 0) {
+                localStorage.removeItem('Cart');
+            }
+        });
+    
+        const btnRmvFromCart = document.createElement("button");
+        btnRmvFromCart.innerText = 'Remover del carrito';
+    
+        btnRmvFromCart.addEventListener("click", () => {
+            prodQuantity = 0;
+            updateQuantText();
+            const index = cart.findIndex(item => item.product.name === product.name);
+            if (index !== -1) {
+                cart.splice(index, 1);
+                localStorage.setItem('Cart', JSON.stringify(cart));
+                console.log(cart);
+            }
+            if (cart.length === 0) {
+                localStorage.removeItem('Cart');
+            }
+            DetailCreator(cart);
+        })
+        
+        div.appendChild(lblProdQuant);
+        div.appendChild(btnProdAdd);
+        div.appendChild(btnProdSub);
+        div.appendChild(btnRmvFromCart);
+        divProdList.appendChild(div);
+    })
+}
 
-/* 
-const prodLabel = (list, id) => `${list.find(element => element.id === id).name}: $${list.find(element => element.id === id).price} c/u, cantidad:`;
+const divCalc = document.createElement("div");
 
-const lblProd1 = document.getElementById('Prod1')
-lblProd1.textContent = prodLabel(products, 'prod1');
-const lblProd2 = document.getElementById('Prod2')
-lblProd2.textContent = prodLabel(products, 'prod2');
-const lblProd3 = document.getElementById('Prod3')
-lblProd3.textContent = prodLabel(products, 'prod3');
+const pCalcDetail = document.createElement("p");
 
-const lblProd1Quant = document.getElementById('Prod1Quant')
-const btnProd1Add = document.getElementById('Prod1Add');
-const btnProd1Sub = document.getElementById('Prod1Sub');
-
-btnProd1Add.addEventListener('click', function() {
-    products[0].quantity++;
-    console.log(products[0].quantity);
-    lblProd1Quant.textContent = products[0].quantity;
-});
-
-btnProd1Sub.addEventListener('click', function() {
-    if(products[0].quantity>0){
-        products[0].quantity--;
-        console.log(products[0].quantity);
-        lblProd1Quant.textContent = products[0].quantity;
-    }
-});
-
-const lblProd2Quant = document.getElementById('Prod2Quant');
-const btnProd2Add = document.getElementById('Prod2Add');
-const btnProd2Sub = document.getElementById('Prod2Sub');
-
-
-btnProd2Add.addEventListener('click', function() {
-    products[1].quantity++;
-    console.log(products[1].quantity);
-    lblProd2Quant.textContent = products[1].quantity;
-});
-
-btnProd2Sub.addEventListener('click', function() {
-    if(products[1].quantity>0){
-        products[1].quantity--;
-        console.log(products[1].quantity);
-        lblProd2Quant.textContent = products[1].quantity;
-    }
-});
-
-const lblProd3Quant = document.getElementById('Prod3Quant');
-const btnProd3Add = document.getElementById('Prod3Add');
-const btnProd3Sub = document.getElementById('Prod3Sub');
-let prod3Quant = 0;
-
-btnProd3Add.addEventListener('click', function() {
-    products[2].quantity++;
-    console.log(products[2].quantity);
-    lblProd3Quant.textContent = products[2].quantity;
-});
-
-btnProd3Sub.addEventListener('click', function() {
-    if(products[2].quantity>0){
-        products[2].quantity--;
-        console.log(products[2].quantity);
-        lblProd3Quant.textContent = products[2].quantity;
-    }
-});
-
-const btnCalculate = document.getElementById('Calculate');
-const btnCustom = document.getElementById('Custom')
-const btnReset = document.getElementById('Reset');
-
-const calcDetail = (list, id) => list[id].price*list[id].quantity;
+const calcDetail = (list, id) => list[id].product.price*list[id].quantity;
 
 function calcTotal(list) {
     let total = 0;
@@ -142,56 +110,44 @@ function calcTotal(list) {
     return total;
 }
 
-const showResult = () => alert(`Detalle:${detailCreator(products)}
-        
-        Total: $${calcTotal(products)}
-        `);
-
-function detailCreator(list) {
+function subDetailCreator(list) {
+    const orderedList = [...list].sort((a, b) => {
+        return a.product.name.localeCompare(b.product.name);
+    });
     let detailText = [];
-    for (let i = 0; i < list.length; i++) {
-        if (products[i].quantity > 0) {
-            detailText.push(`\n\-${list[i].name} x ${list[i].quantity} :   ${calcDetail(list, i)}`);
+    for (let i = 0; i < orderedList.length; i++) {
+        if (orderedList[i].quantity > 0) {
+            detailText.push(`\n\-${orderedList[i].product.name} x ${orderedList[i].quantity} :   ${calcDetail(orderedList, i)}`);
         }
     }
     return detailText.join('');
 }
 
-btnCalculate.addEventListener('click', function() {
-    if(calcTotal(products)>0) {
-        showResult();
-    }
-});
-
-btnCustom.addEventListener('click', function() {
-    products[0].quantity=0;
-    lblProd1Quant.textContent = products[0].quantity;
-    products[1].quantity=0;
-    lblProd2Quant.textContent = products[1].quantity;
-    products[2].quantity=0;
-    lblProd3Quant.textContent = products[2].quantity;
-    let value;
-    for (let i = 0; i < products.length; i++){
-        value = parseFloat(window.prompt(`Ingrese la cantidad de ${products[i].name}s`));
-        if (!Number.isNaN(value) && value>0){
-            products[i].quantity=value;
-        }
-    }
-    if(calcTotal(products)>0) {
-        showResult();
+function DetailCreator(list) {
+    if(list.length === 0){
+        pCalcDetail.innerText = '';
     } else {
-        alert("No se ha introducido ningún valor válido. Por favor, vuelva a intentarlo.")
+        pCalcDetail.innerText = `Detalle:${subDetailCreator(list)}
+        
+            Total: $${calcTotal(list)}`;
     }
-});
+    
+}
 
-btnReset.addEventListener('click', function() {
-    if (confirm("¿Está seguro de que desea reiniciar? Esto eliminará todos los datos del carrito.")) {
-        products[0].quantity=0;
-        lblProd1Quant.textContent = products[0].quantity;
-        products[1].quantity=0;
-        lblProd2Quant.textContent = products[1].quantity;
-        products[2].quantity=0;
-        lblProd3Quant.textContent = products[2].quantity;
-    }
-});
- */
+const btnDelCart = document.createElement("button");
+btnDelCart.innerText = 'Eliminar Carrito';
+
+btnDelCart.addEventListener("click", () => {
+    cart = [];
+    localStorage.removeItem('Cart');
+    divProdList.innerHTML = '';
+    renderProductList();
+    DetailCreator(cart);
+})
+
+document.body.appendChild(divCalc);
+divCalc.appendChild(btnDelCart);
+divCalc.appendChild(pCalcDetail);
+
+renderProductList();
+DetailCreator(cart);
