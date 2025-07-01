@@ -24,13 +24,16 @@ function renderProductList() {
         
         const existingItem = getCartItem(product);
         let prodQuantity = existingItem?.quantity ?? 0;
-        const lblProdQuant = document.createElement("p");
-        lblProdQuant.classList.add("lblProdQuant");
-        function updateQuantText() {
-            lblProdQuant.textContent = `Cantidad: ${prodQuantity}`;
-        }
-        updateQuantText();
+        const lblWrapper = document.createElement("label");
+        lblWrapper.innerText = "Cantidad: ";
 
+        const inputQuant = document.createElement("input");
+        inputQuant.type = "number";
+        inputQuant.inputMode = "numeric";
+        inputQuant.min = 0;
+        inputQuant.value = prodQuantity;
+        inputQuant.classList.add("lblProdQuantInput");
+        
         function updateDetail() {
             const cartItem = getCartItem(product);
             if (prodQuantity !== 0) {
@@ -47,40 +50,42 @@ function renderProductList() {
             }
             DetailCreator(cart);
         }
-    
-        const btnProdAdd = document.createElement("button");
-        btnProdAdd.innerText = '+';
-        const btnProdSub = document.createElement("button");
-        btnProdSub.innerText = '-';
-    
-        btnProdAdd.addEventListener('click', function() {
-            prodQuantity++;
-            updateQuantText();
-            updateDetail()
+
+        inputQuant.addEventListener("input", () => {
+            const val = parseInt(inputQuant.value);
+            prodQuantity = isNaN(val) || val < 0 ? 0 : val;
+            updateDetail();
         });
-    
-        btnProdSub.addEventListener('click', function() {
-            if(prodQuantity>0){
-                prodQuantity--;
-                updateQuantText();
-            }
-            updateDetail()
-            if (cart.length === 0) {
-                localStorage.removeItem('Cart');
+
+        inputQuant.addEventListener('keydown', (e) => {
+            if (
+                !(
+                    (e.key >= '0' && e.key <= '9') ||
+                    e.key === 'Backspace' ||
+                    e.key === 'Delete' ||
+                    e.key === 'ArrowLeft' ||
+                    e.key === 'ArrowRight' ||
+                    e.key === 'Tab'
+                )
+            ) {
+                e.preventDefault();
             }
         });
-    
+
+        inputQuant.addEventListener('focus', (e) => {
+            e.target.select();
+        });
+
         const btnRmvFromCart = document.createElement("button");
         btnRmvFromCart.innerText = 'Remover del carrito';
     
         btnRmvFromCart.addEventListener("click", () => {
             prodQuantity = 0;
-            updateQuantText();
+            inputQuant.value = 0;
             const index = cart.findIndex(item => item.product.name === product.name);
             if (index !== -1) {
                 cart.splice(index, 1);
                 localStorage.setItem('Cart', JSON.stringify(cart));
-                console.log(cart);
             }
             if (cart.length === 0) {
                 localStorage.removeItem('Cart');
@@ -88,9 +93,8 @@ function renderProductList() {
             DetailCreator(cart);
         })
         
-        div.appendChild(lblProdQuant);
-        div.appendChild(btnProdAdd);
-        div.appendChild(btnProdSub);
+        lblWrapper.appendChild(inputQuant);
+        div.appendChild(lblWrapper);
         div.appendChild(btnRmvFromCart);
         divProdList.appendChild(div);
     })
@@ -145,9 +149,9 @@ btnDelCart.addEventListener("click", () => {
     DetailCreator(cart);
 })
 
+renderProductList();
+DetailCreator(cart);
+
 document.body.appendChild(divCalc);
 divCalc.appendChild(btnDelCart);
 divCalc.appendChild(pCalcDetail);
-
-renderProductList();
-DetailCreator(cart);
