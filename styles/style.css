@@ -39,6 +39,7 @@ button {
   vertical-align: middle;
   white-space: nowrap;
   transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  margin: 5px 0px;
 }
 button:hover {
   background-color: #83BC71;

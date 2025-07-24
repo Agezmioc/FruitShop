@@ -1,10 +1,34 @@
 let products =[
-    { name: 'Banana', price: 5, image: 'https://cdn-icons-png.freepik.com/512/3313/3313721.png?ga=GA1.1.724132260.1751382087'},
-    { name: 'Manzana', price: 3, image: 'https://cdn-icons-png.freepik.com/512/3313/3313723.png?ga=GA1.1.724132260.1751382087'},
-    { name: 'Naranja', price: 2.5, image: 'https://cdn-icons-png.freepik.com/512/3313/3313710.png?ga=GA1.1.724132260.1751382087'}
+    { name: 'Banana', apiName: 'banana', price: 5, image: 'https://cdn-icons-png.freepik.com/512/3313/3313721.png?ga=GA1.1.724132260.1751382087'},
+    { name: 'Manzana', apiName: 'apple', price: 3, image: 'https://cdn-icons-png.freepik.com/512/3313/3313723.png?ga=GA1.1.724132260.1751382087'},
+    { name: 'Naranja', apiName: 'orange', price: 2.5, image: 'https://cdn-icons-png.freepik.com/512/3313/3313710.png?ga=GA1.1.724132260.1751382087'}
 ];
 
 let cart = JSON.parse(localStorage.getItem('Cart')) ?? [];
+
+async function fetchNutritionData(fruitName) {
+    const url = `https://www.fruityvice.com/api/fruit/${fruitName.toLowerCase()}`;
+    const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`);
+    if (!response.ok) throw new Error("No se pudo obtener la información nutricional");
+    const data = await response.json();
+    return data.nutritions;
+}
+
+async function loadNutritionData() {
+    for (let product of products) {
+        const nutrition = await fetchNutritionData(product.apiName);
+        if (nutrition) {
+            product.nutrition = nutrition;
+        }
+    }
+}
+
+(async () => {
+    await loadNutritionData();
+    renderProductList();
+    DetailCreator(cart);
+    toggleCalcVisibility();
+})();
 
 const divProdList = document.getElementById('ProdList');
 
@@ -84,6 +108,41 @@ function renderProductList() {
             e.target.select();
         });
 
+        const btnNutInfo = document.createElement("button");
+        btnNutInfo.innerText = 'Información Nutricional';
+        
+        btnNutInfo.addEventListener("click", () => {
+            if (!product.nutrition) {
+                Toastify({
+                    text: "Información nutricional no disponible",
+                    duration: 3000,
+                    gravity: "center",
+                    position: "center",
+                    style: {
+                        background: "#300D4A",
+                        "box-shadow": "0 0 50px 15px #1D3E1D",
+                        color: '#83BC71'
+                    }
+                }).showToast();
+                return;
+            }
+
+            const { calories, sugar, carbohydrates, protein, fat } = product.nutrition;
+
+            Swal.fire({
+                title: `Información nutricional de 100g de ${product.name}`,
+                html: `
+                    <p>Calorías: ${calories} kcal</p>
+                    <p>Azúcar: ${sugar} g</p>
+                    <p>Carbohidratos: ${carbohydrates} g</p>
+                    <p>Proteína: ${protein} g</p>
+                    <p>Grasas: ${fat} g</p>
+                `,
+                icon: "info",
+                confirmButtonText: "Cerrar"
+            });
+        })
+
         const btnRmvFromCart = document.createElement("button");
         btnRmvFromCart.innerText = 'Remover del carrito';
     
@@ -105,7 +164,6 @@ function renderProductList() {
                         color: '#300D4A'
                     }
                 }).showToast();
-
             }
             if (cart.length === 0) {
                 localStorage.removeItem('Cart');
@@ -119,6 +177,7 @@ function renderProductList() {
         info.appendChild(pName);
         info.appendChild(pPrice);
         info.appendChild(lblWrapper);
+        info.appendChild(btnNutInfo);
         info.appendChild(btnRmvFromCart);
         lblWrapper.appendChild(inputQuant);
         divProdList.appendChild(div);
@@ -257,10 +316,6 @@ btnDelCart.addEventListener("click", () => {
         }
     });
 })
-
-renderProductList();
-DetailCreator(cart);
-toggleCalcVisibility();
 
 const main = document.querySelector('main')
 
