@@ -13,10 +13,70 @@ body {
   flex-direction: column;
 }
 
+button {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background-color: #56742F;
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, 0.1) 0 1px 0;
+  box-sizing: border-box;
+  color: #300D4A;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  padding: 6px 16px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  -moz-user-select: none;
+       user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+  transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+button:hover {
+  background-color: #83BC71;
+}
+button:active {
+  background-color: #D8D987;
+  box-shadow: rgba(20, 70, 32, 0.2) 0 1px 0 inset;
+}
+
+input {
+  background-color: #83BC71;
+  color: #300D4A;
+  border: 1px solid #56742F;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  width: 60px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+input:focus {
+  outline: none;
+  border-color: #D8D987;
+  box-shadow: 0 0 4px #D8D987;
+}
+input::-moz-selection {
+  background-color: #D8D987;
+  color: #1D3E1D;
+}
+input::selection {
+  background-color: #D8D987;
+  color: #1D3E1D;
+}
+
 footer {
   background-color: #300D4A;
   color: #83BC71;
   padding: 1rem;
+  height: -moz-fit-content;
   height: fit-content;
   margin-top: auto;
 }
@@ -37,6 +97,7 @@ h1 {
 header {
   background-color: #83BC71;
   padding: 1rem;
+  height: -moz-fit-content;
   height: fit-content;
 }
 header p {
@@ -61,7 +122,8 @@ main {
 #ProdList .prodDiv img {
   width: 80px;
   height: 80px;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
   border-radius: 0.5rem;
 }
 #ProdList .prodDiv .prodInfo {
@@ -72,56 +134,6 @@ main {
 #ProdList .prodDiv .prodInfo p {
   margin: 0.25rem 0;
 }
-#ProdList .prodDiv .prodInfo button {
-  appearance: none;
-  background-color: #56742F;
-  border: 1px solid rgba(27, 31, 35, 0.15);
-  border-radius: 6px;
-  box-shadow: rgba(27, 31, 35, 0.1) 0 1px 0;
-  box-sizing: border-box;
-  color: #300D4A;
-  cursor: pointer;
-  display: inline-block;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 20px;
-  padding: 6px 16px;
-  position: relative;
-  text-align: center;
-  text-decoration: none;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  vertical-align: middle;
-  white-space: nowrap;
-  transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
-}
-#ProdList .prodDiv .prodInfo button:hover {
-  background-color: #83BC71;
-}
-#ProdList .prodDiv .prodInfo button:active {
-  background-color: #D8D987;
-  box-shadow: rgba(20, 70, 32, 0.2) 0 1px 0 inset;
-}
-#ProdList .prodDiv .prodInfo input {
-  background-color: #83BC71;
-  color: #300D4A;
-  border: 1px solid #56742F;
-  border-radius: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  width: 60px;
-  font-size: 1rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-#ProdList .prodDiv .prodInfo input:focus {
-  outline: none;
-  border-color: #D8D987;
-  box-shadow: 0 0 4px #D8D987;
-}
-#ProdList .prodDiv .prodInfo input::selection {
-  background-color: #D8D987;
-  color: #1D3E1D;
-}
 
 .calcDiv {
   background-color: #83BC71;
@@ -131,17 +143,33 @@ main {
   border-radius: 0.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   padding: 1rem;
+  width: -moz-fit-content;
   width: fit-content;
+  height: -moz-fit-content;
   height: fit-content;
   margin: auto;
 }
-.calcDiv p {
+.calcDiv .calcDetailText {
+  display: flex;
+  justify-content: center;
   margin: 0.5rem 0;
   white-space: pre-wrap;
 }
-.calcDiv button {
-  display: block;
-  margin: auto;
+.calcDiv .DetailBtns {
+  display: flex;
+  flex-direction: row;
+  margin-top: 2rem;
+  gap: 10px;
 }
-
-/*# sourceMappingURL=style.css.map */
+.calcDiv .DetailBtns button {
+  background-color: #300D4A;
+  color: #83BC71;
+}
+.calcDiv .DetailBtns button:hover {
+  background-color: #56742F;
+  color: #300D4A;
+}
+.calcDiv .DetailBtns button:active {
+  background-color: #D8D987;
+  box-shadow: rgba(20, 70, 32, 0.2) 0 1px 0 inset;
+}/*# sourceMappingURL=style.css.map */

@@ -15,6 +15,63 @@ body {
     flex-direction: column;
 }
 
+button {
+    appearance: none;
+    background-color: map-get($map: $colors, $key: bright);
+    border: 1px solid rgba(27, 31, 35, .15);
+    border-radius: 6px;
+    box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+    box-sizing: border-box;
+    color: map-get($map: $colors, $key: dark);
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    padding: 6px 16px;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    white-space: nowrap;
+    transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+
+    &:hover {
+        background-color: map-get($map: $colors, $key: brighter);
+    }
+
+
+    &:active {
+        background-color: map-get($map: $colors, $key: highlight);
+        box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
+    }
+}
+
+input {
+    background-color: map-get($colors, brighter);
+    color: map-get($colors, dark);
+    border: 1px solid map-get($colors, bright);
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    width: 60px;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+
+    &:focus {
+        outline: none;
+        border-color: map-get($colors, highlight);
+        box-shadow: 0 0 4px map-get($colors, highlight);
+    }
+
+    &::selection {
+        background-color: map-get($colors, highlight);
+        color: map-get($colors, base);
+    }
+}
+
 footer {
     background-color: map-get($map: $colors, $key: dark);
     color: map-get($map: $colors, $key: brighter);
@@ -80,63 +137,6 @@ main {
             p {
             margin: 0.25rem 0;
             }
-
-            button {
-                appearance: none;
-                background-color: map-get($map: $colors, $key: bright);
-                border: 1px solid rgba(27, 31, 35, .15);
-                border-radius: 6px;
-                box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
-                box-sizing: border-box;
-                color: map-get($map: $colors, $key: dark);
-                cursor: pointer;
-                display: inline-block;
-                font-size: 14px;
-                font-weight: 600;
-                line-height: 20px;
-                padding: 6px 16px;
-                position: relative;
-                text-align: center;
-                text-decoration: none;
-                user-select: none;
-                -webkit-user-select: none;
-                touch-action: manipulation;
-                vertical-align: middle;
-                white-space: nowrap;
-                transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
-
-                &:hover {
-                    background-color: map-get($map: $colors, $key: brighter);
-                }
-
-
-                &:active {
-                    background-color: map-get($map: $colors, $key: highlight);
-                    box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
-                }
-            }
-
-            input {
-                background-color: map-get($colors, brighter);
-                color: map-get($colors, dark);
-                border: 1px solid map-get($colors, bright);
-                border-radius: 0.25rem;
-                padding: 0.25rem 0.5rem;
-                width: 60px;
-                font-size: 1rem;
-                transition: border-color 0.2s, box-shadow 0.2s;
-
-                &:focus {
-                    outline: none;
-                    border-color: map-get($colors, highlight);
-                    box-shadow: 0 0 4px map-get($colors, highlight);
-                }
-
-                &::selection {
-                    background-color: map-get($colors, highlight);
-                    color: map-get($colors, base);
-                }
-            }
         }
     }
     
@@ -154,14 +154,34 @@ main {
     height: fit-content;
     margin: auto;
 
-    p {
+    .calcDetailText {
+        display: flex;
+        justify-content: center;
         margin: 0.5rem 0;
         white-space: pre-wrap;
     }
 
-    button {
-        display: block;
-        margin: auto;
+    .DetailBtns {
+        display: flex;
+        flex-direction: row;
+        margin-top: 2rem;
+        gap: 10px;
+
+        button {
+            background-color: map-get($map: $colors, $key: dark);
+            color: map-get($map: $colors, $key: brighter);
+
+            &:hover {
+                background-color: map-get($map: $colors, $key: bright);
+                color: map-get($map: $colors, $key: dark);
+            }
+
+
+            &:active {
+                background-color: map-get($map: $colors, $key: highlight);
+                box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
+            }
+        }
     }
 }
 

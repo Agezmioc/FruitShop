@@ -94,6 +94,18 @@ function renderProductList() {
             if (index !== -1) {
                 cart.splice(index, 1);
                 localStorage.setItem('Cart', JSON.stringify(cart));
+                Toastify({
+                    text: "Producto eliminado.",
+                    duration: 3000,
+                    gravity: "bottom",
+                    position: "right",
+                    style: {
+                        background: "#83BC71",
+                        "box-shadow": "0 0 50px 15px #1D3E1D",
+                        color: '#300D4A'
+                    }
+                }).showToast();
+
             }
             if (cart.length === 0) {
                 localStorage.removeItem('Cart');
@@ -153,23 +165,97 @@ function DetailCreator(list) {
     if(list.length === 0){
         pCalcDetail.innerText = '';
     } else {
-        pCalcDetail.innerText = `Detalle:${subDetailCreator(list)}
+        pCalcDetail.innerText = `Detalle:
+        ${subDetailCreator(list)}
         
             Total: $${calcTotal(list)}`;
     }
     
 }
 
+const divDetailBtns = document.createElement("div");
+divDetailBtns.classList.add("DetailBtns");
+
+const btnBuy = document.createElement("button");
+btnBuy.innerText = 'Finalizar Compra';
+
+btnBuy.addEventListener("click", () => {
+    Swal.fire({
+        title: "¿Desea finalizar su compra?",
+        text: "Esto generará una factura a su nombre y se prepararán los productos para su retiro.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Confirmar",
+        cancelButtonText: "Cancelar"
+    }).then( async (result) => {
+        if (result.isConfirmed) {
+            const { value: formValues } = await Swal.fire({
+                title: "Introduzca su nombre completo y su dirección",
+                html: `
+                    <label>Nombre completo</label>
+                    <input id="swal-input1" class="swal2-input">
+
+                    <label>Dirección</label>
+                    <input id="swal-input2" class="swal2-input">
+                `,
+                focusConfirm: false,
+                preConfirm: () => {
+                    return [
+                    document.getElementById("swal-input1").value,
+                    document.getElementById("swal-input2").value
+                    ];
+                }
+            });
+            if (formValues[0] && formValues[1]) {
+                Swal.fire(`Muchas gracias ${formValues[0]}, su pedido llegará a ${formValues[1]} dentro de ${Math.floor(Math.random() * 158 + 1)} minutos`);
+                cart = [];
+                localStorage.removeItem('Cart');
+                divProdList.innerHTML = '';
+                renderProductList();
+                DetailCreator(cart);
+                toggleCalcVisibility();
+            }
+        }
+    });
+})
+
+const swalConfirmDel = Swal.mixin({
+    customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger"
+    },
+    buttonsStyling: true
+});
+
 const btnDelCart = document.createElement("button");
 btnDelCart.innerText = 'Eliminar Carrito';
 
 btnDelCart.addEventListener("click", () => {
-    cart = [];
-    localStorage.removeItem('Cart');
-    divProdList.innerHTML = '';
-    renderProductList();
-    DetailCreator(cart);
-    toggleCalcVisibility();
+    swalConfirmDel.fire({
+        title: "¿Seguro desea eliminar su carrito?",
+        text: "Esta acción es irreversible",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Si, eliminar.",
+        cancelButtonText: "No, cancelar.",
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            cart = [];
+            localStorage.removeItem('Cart');
+            divProdList.innerHTML = '';
+            renderProductList();
+            DetailCreator(cart);
+            toggleCalcVisibility();
+            swalConfirmDel.fire({
+                title: "Eliminado",
+                text: "Los productos del carrito han sido eliminados.",
+                icon: "success"
+            });
+        }
+    });
 })
 
 renderProductList();
@@ -180,4 +266,6 @@ const main = document.querySelector('main')
 
 main.appendChild(divCalc);
 divCalc.appendChild(pCalcDetail);
-divCalc.appendChild(btnDelCart);
+divCalc.appendChild(divDetailBtns);
+divDetailBtns.appendChild(btnBuy);
+divDetailBtns.appendChild(btnDelCart);
